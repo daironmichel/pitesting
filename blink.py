@@ -1,13 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 
-LED = 18  # pin connected to the LED
+LED = 4  # pin connected to the LED
 ON = True  # could also be 1 or GPIO.HIGH
 OFF = False  # could also be 0 or GPIO.LOW
 
 def setup():
     print('setting things up...')
-    GPIO.cleanup()
+    # GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(LED, GPIO.OUT)
 
@@ -18,11 +18,11 @@ def switch_led(value):
 def blink():
     print('blinking...')
     switch_led(OFF)
-    for _ in range(3):
+    for _ in range(12):
         switch_led(ON)
-        time.sleep(1)
+        time.sleep(0.25)
         switch_led(OFF)
-        time.sleep(1)
+        time.sleep(0.25)
 
 def end():
     print('cleaning...')
