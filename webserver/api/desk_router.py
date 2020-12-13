@@ -1,27 +1,28 @@
 
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import APIRouter
 from gpiozero import LED
 
-app = FastAPI()
+desk_router = APIRouter(prefix="/api/desk", tags=["desk"])
+
 led = LED(4)
 
 
-@app.get("/")
+@desk_router.get("/")
 def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/items/{item_id}")
+@desk_router.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
 
-@app.post("/api/ledon")
+@desk_router.post("/ledon")
 def api_ledon():
     led.on()
 
 
-@app.post("/api/ledoff")
+@desk_router.post("/ledoff")
 def api_ledoff():
     led.off()
