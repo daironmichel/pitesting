@@ -15,22 +15,24 @@ class Desk:
         self.down_button.when_deactivated = self.up_or_down_released
 
     def up_pressed(self):
-        print("forward")
+        # print("forward")
         self.motor.forward()
+        # print(f"motor: {self.motor.__dict__}")
 
     def up_or_down_released(self):
-        print("stop")
+        # print("stop")
         self.motor.stop()
 
     def down_pressed(self):
-        print("backward")
+        # print("backward")
         self.motor.backward()
+        # print(f"motor: {self.motor.__dict__}")
 
 
 desk: Optional[Desk] = None
 
 
 def init():
-    print("initializing desk")
+    # print("initializing desk")
     global desk
     desk = Desk()
