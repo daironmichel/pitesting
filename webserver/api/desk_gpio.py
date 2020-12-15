@@ -7,7 +7,7 @@ class Desk:
     def __init__(self):
         self.up_button: Button = Button(23)
         self.down_button: Button = Button(24)
-        self.motor: PhaseEnableMotor = PhaseEnableMotor(6, 13)  # pins(dir, pwm)
+        self.motor: PhaseEnableMotor = PhaseEnableMotor(6, 12)  # pins(dir, pwm)
 
         self.up_button.when_activated = self.up_pressed
         self.up_button.when_deactivated = self.up_or_down_released
