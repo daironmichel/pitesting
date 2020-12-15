@@ -5,8 +5,8 @@ from gpiozero import Button, PhaseEnableMotor
 
 class Desk:
     def __init__(self):
-        self.up_button: Button = Button(21)
-        self.down_button: Button = Button(20)
+        self.up_button: Button = Button(23)
+        self.down_button: Button = Button(24)
         self.motor: PhaseEnableMotor = PhaseEnableMotor(6, 13)  # pins(dir, pwm)
 
         self.up_button.when_activated = self.up_pressed
