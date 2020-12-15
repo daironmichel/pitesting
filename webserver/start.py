@@ -1,11 +1,13 @@
 import os
 import sys
+
 import uvicorn
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(os.path.dirname(BASE_DIR))
+sys.path.append(BASE_DIR)
 
 if __name__ == "__main__":
     uvicorn.run(
