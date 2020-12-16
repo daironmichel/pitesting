@@ -1,28 +1,46 @@
 
 from typing import Optional
 from fastapi import APIRouter
-from gpiozero import LED
+
+from . import desk_gpio
 
 desk_router = APIRouter(prefix="/api/desk", tags=["desk"])
 
-led = LED(4)
+
+@desk_router.post("/up")
+def move_desk_up():
+    desk_gpio.desk.motor.forward()
+    return {"ok": True}
 
 
-@desk_router.get("/")
-def read_root():
-    return {"Hello": "World"}
+@desk_router.post("/stop")
+def stop_desk():
+    desk_gpio.desk.motor.stop()
+    return {"ok": True}
 
 
-@desk_router.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@desk_router.post("/down")
+def move_desk_down():
+    desk_gpio.desk.motor.backward()
+    return {"ok": True}
 
 
-@desk_router.post("/ledon")
-def api_ledon():
-    led.on()
-
-
-@desk_router.post("/ledoff")
-def api_ledoff():
-    led.off()
+# @desk_router.get("/")
+# def motor_forward():
+#     desk_gpio.desk.motor.forward()
+#     return {"Hello": "World"}
+#
+#
+# @desk_router.get("/items/{item_id}")
+# def read_item(item_id: int, q: Optional[str] = None):
+#     return {"item_id": item_id, "q": q}
+#
+#
+# @desk_router.post("/ledon")
+# def api_ledon():
+#     led.on()
+#
+#
+# @desk_router.post("/ledoff")
+# def api_ledoff():
+#     led.off()

@@ -1,15 +1,15 @@
 import os
 import sys
 
+import dotenv
 import uvicorn
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.chdir(os.path.dirname(BASE_DIR))
-sys.path.append(BASE_DIR)
+dotenv.load_dotenv(dotenv.find_dotenv('env.dev'))
 
 if __name__ == "__main__":
+    from webserver.settings import BASE_DIR, DEBUG
+    sys.path.append(BASE_DIR)
+    os.chdir(os.path.dirname(BASE_DIR))
     uvicorn.run(
         "webserver.app:app",
         host="127.0.0.1" if DEBUG else "0.0.0.0",

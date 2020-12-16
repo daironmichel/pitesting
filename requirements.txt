@@ -2,5 +2,6 @@ aiofiles==0.6.0
 fastapi==0.62.0
 gpiozero==1.5.1
 Jinja2==2.11.2
+pigpio==1.78
 python-dotenv==0.15.0
 uvicorn==0.12.3
