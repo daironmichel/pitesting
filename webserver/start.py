@@ -8,7 +8,7 @@ dotenv.load_dotenv(dotenv.find_dotenv('env.dev'))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 if __name__ == "__main__":
-    from webserver.settings import DEBUG
+    from .settings import DEBUG
     sys.path.append(BASE_DIR)
     os.chdir(os.path.dirname(BASE_DIR))
     uvicorn.run(
