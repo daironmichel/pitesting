@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+# build/  # need to commit cuz don't want to build on the rpi
 develop-eggs/
 dist/
 downloads/
@@ -110,6 +110,7 @@ ENV/
 env.bak/
 venv.bak/
 webserver/env.dev
+webserver/env.prod
 
 # Spyder project settings
 .spyderproject
