@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
 if __name__ == "__main__":
-    from .settings import DEBUG
+    from webserver.settings import DEBUG
     os.chdir(os.path.dirname(BASE_DIR))
     uvicorn.run(
         "webserver.app:app",
