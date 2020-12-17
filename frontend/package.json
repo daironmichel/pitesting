@@ -16,6 +16,7 @@
     "autoprefixer": "9",
     "axios": "^0.21.0",
     "classnames": "^2.2.6",
+    "lodash.debounce": "^4.0.8",
     "postcss": "7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -31,7 +32,7 @@
     "eject": "react-scripts eject",
     "build:tailwind": "tailwindcss build src/index.css -o src/index.tailwind.css",
     "prestart": "yarn run build:tailwind",
-    "prebuild": "yarn run build:tailwind"
+    "prebuild": "NODE_ENV=production yarn run build:tailwind"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +54,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/lodash.debounce": "^4.0.6",
     "prettier": "^2.2.1"
   }
 }

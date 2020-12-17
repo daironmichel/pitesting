@@ -1,8 +1,13 @@
 import React from "react";
 import axios from "axios";
+import debounce from "lodash.debounce";
 import Button from "../components/Button";
+import FormInput from "../components/FormInput";
 
 function Dashboard() {
+  const [speed, setSpeed] = React.useState("100");
+  const [frequency, setFrequency] = React.useState("100");
+
   const axiosInstance = axios.create({ baseURL: window.location.origin });
   const raiseDesk = async () => {
     try {
@@ -28,6 +33,32 @@ function Dashboard() {
     }
   };
 
+  const submitSpeed = debounce(async (speed: string) => {
+    try {
+      await axiosInstance.post("/api/desk/motor", { speed });
+    } catch (e) {
+      console.error(e);
+    }
+  }, 500);
+
+  const submitFrequency = debounce(async (frequency: string) => {
+    try {
+      await axiosInstance.post("/api/desk/motor", { frequency });
+    } catch (e) {
+      console.error(e);
+    }
+  }, 500);
+
+  const handleSpeedChange = (value: string) => {
+    setSpeed(value);
+    submitSpeed(value);
+  };
+
+  const handleFrequencyChange = (value: string) => {
+    setFrequency(value);
+    submitFrequency(value);
+  };
+
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-gray-50">
       <div className="px-8 py-8 flex items-center justify-center">
@@ -48,6 +79,30 @@ function Dashboard() {
           />
           <Button label="Start Motor" onClick={raiseDesk} />
           <Button label="Stop Motor" onClick={stopDesk} />
+          <div className="grid grid-cols-6 gap-6">
+            <div className="col-span-6 sm:col-span-3">
+              <FormInput
+                type="number"
+                min="0"
+                max="100"
+                step="5"
+                label="Speed (%)"
+                value={speed}
+                onChange={handleSpeedChange}
+              />
+            </div>
+            <div className="col-span-6 sm:col-span-3">
+              <FormInput
+                type="number"
+                min="100"
+                max="10000"
+                step="10"
+                label="PWM Frequency (Hz)"
+                value={frequency}
+                onChange={handleFrequencyChange}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
