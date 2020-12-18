@@ -36,10 +36,11 @@ def desk_motor(motor_input: MotorInput):
     if motor_input.frequency is not None:
         desk_gpio.desk.motor.enable_device.frequency = motor_input.frequency
     if motor_input.speed is not None:
-        if desk_gpio.desk.motor.value >= 0:
-            desk_gpio.desk.motor.forward(motor_input.speed / 100)
-        else:
-            desk_gpio.desk.motor.backward(motor_input.speed / 100)
+        # if desk_gpio.desk.motor.value >= 0:
+        #     desk_gpio.desk.motor.forward(motor_input.speed / 100)
+        # else:
+        #     desk_gpio.desk.motor.backward(motor_input.speed / 100)
+        desk_gpio.desk.motor.value = motor_input.speed / 100
 
     return {"ok": True}
 
