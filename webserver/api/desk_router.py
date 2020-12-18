@@ -40,7 +40,7 @@ def desk_motor(motor_input: MotorInput):
         #     desk_gpio.desk.motor.forward(motor_input.speed / 100)
         # else:
         #     desk_gpio.desk.motor.backward(motor_input.speed / 100)
-        desk_gpio.desk.motor.value = motor_input.speed / 100
+        desk_gpio.desk.set_motor_speed(motor_input.speed / 100)
 
     return {"ok": True}
 

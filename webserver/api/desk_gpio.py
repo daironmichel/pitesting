@@ -1,10 +1,15 @@
 from typing import Optional
 
+from pigpio import pi
 from gpiozero import Button, PhaseEnableMotor
 
 
 class Desk:
+    PHASE_PIN = 6
+    ENABLE_PIN = 12
+
     def __init__(self):
+        self.pi = pi()
         self.up_button: Button = Button(23)
         self.down_button: Button = Button(24)
         self.motor: PhaseEnableMotor = PhaseEnableMotor(6, 12)  # pins(dir, pwm)
@@ -27,6 +32,14 @@ class Desk:
         # print("backward")
         self.motor.backward()
         # print(f"motor: {self.motor.__dict__}")
+
+    def set_motor_speed(self, value: float):
+        if not self.motor.is_active:
+            return
+        if not 0 <= value <= 1:
+            return
+        pwm_value = int(255 * value)
+        self.pi.set_PWM_dutycycle(self.ENABLE_PIN, pwm_value)
 
 
 desk: Optional[Desk] = None
