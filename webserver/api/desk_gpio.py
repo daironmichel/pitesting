@@ -73,7 +73,7 @@ class DeskMotor(PhaseEnableMotor):
         self.enable_device.off()
         self.phase_device.off()
         self.enable_device.blink(
-            on_time=None, off_time=None, fade_in_time=speed_up_time, max_value=speed)
+            on_time=None, off_time=None, fade_in_time=speed_up_time, max_value=speed, n=1)
 
     def backward(self, speed=1, speed_up_time=1):
         if isinstance(self.enable_device, DigitalOutputDevice):
@@ -83,14 +83,14 @@ class DeskMotor(PhaseEnableMotor):
         self.enable_device.off()
         self.phase_device.on()
         self.enable_device.blink(
-            on_time=None, off_time=None, fade_in_time=speed_up_time, max_value=speed)
+            on_time=None, off_time=None, fade_in_time=speed_up_time, max_value=speed, n=1)
         
     def stop(self, speed_down_time=1):
         """
         Stop the motor.
         """
         self.enable_device.blink(
-            on_time=None, off_time=None, fade_out_time=speed_down_time, max_value=self.value)
+            on_time=None, off_time=None, fade_out_time=speed_down_time, max_value=self.value, n=1)
 
 
 class Desk:
