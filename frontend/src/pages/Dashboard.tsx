@@ -7,11 +7,16 @@ import FormInput from "../components/FormInput";
 function Dashboard() {
   const [speed, setSpeed] = React.useState("100");
   const [frequency, setFrequency] = React.useState("3000");
+  const [transition, setTransition] = React.useState("1");
 
   const axiosInstance = axios.create({ baseURL: window.location.origin });
   const raiseDesk = async () => {
     try {
-      await axiosInstance.post("/api/desk/up");
+      await axiosInstance.post("/api/desk/up", {
+        speed,
+        frequency,
+        transition,
+      });
     } catch (e) {
       console.error(e);
     }
@@ -19,7 +24,11 @@ function Dashboard() {
 
   const lowerDesk = async () => {
     try {
-      await axiosInstance.post("/api/desk/down");
+      await axiosInstance.post("/api/desk/down", {
+        speed,
+        frequency,
+        transition,
+      });
     } catch (e) {
       console.error(e);
     }
@@ -27,7 +36,11 @@ function Dashboard() {
 
   const stopDesk = async () => {
     try {
-      await axiosInstance.post("/api/desk/stop");
+      await axiosInstance.post("/api/desk/stop", {
+        speed,
+        frequency,
+        transition,
+      });
     } catch (e) {
       console.error(e);
     }
@@ -49,6 +62,14 @@ function Dashboard() {
     }
   }, 500);
 
+  const submitTransition = debounce(async (transition: string) => {
+    try {
+      await axiosInstance.post("/api/desk/motor", { transition });
+    } catch (e) {
+      console.error(e);
+    }
+  }, 500);
+
   const handleSpeedChange = (value: string) => {
     setSpeed(value);
     submitSpeed(value);
@@ -57,6 +78,11 @@ function Dashboard() {
   const handleFrequencyChange = (value: string) => {
     setFrequency(value);
     submitFrequency(value);
+  };
+
+  const handleTransitionChange = (value: string) => {
+    setTransition(value);
+    submitTransition(value);
   };
 
   return (
@@ -100,6 +126,17 @@ function Dashboard() {
                 label="PWM Frequency (Hz)"
                 value={frequency}
                 onChange={handleFrequencyChange}
+              />
+            </div>
+            <div className="col-span-6 sm:col-span-3">
+              <FormInput
+                type="number"
+                min="0"
+                max="30"
+                step="0.5"
+                label="Transition Time (sec)"
+                value={transition}
+                onChange={handleTransitionChange}
               />
             </div>
           </div>
