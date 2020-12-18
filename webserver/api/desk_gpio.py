@@ -40,6 +40,7 @@ class Desk:
         if not 0 <= value <= 1:
             return
         pwm_value = int(255 * value)
+        print(f"setting pwm: {pwm_value}")
         self.pi.set_PWM_dutycycle(self.ENABLE_PIN, pwm_value)
 
 
