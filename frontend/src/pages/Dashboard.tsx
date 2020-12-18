@@ -72,17 +72,23 @@ function Dashboard() {
 
   const handleSpeedChange = (value: string) => {
     setSpeed(value);
-    submitSpeed(value);
+    if (!isNaN(parseInt(value))) {
+      submitSpeed(value);
+    }
   };
 
   const handleFrequencyChange = (value: string) => {
     setFrequency(value);
-    submitFrequency(value);
+    if (!isNaN(parseInt(value))) {
+      submitFrequency(value);
+    }
   };
 
   const handleTransitionChange = (value: string) => {
     setTransition(value);
-    submitTransition(value);
+    if (!isNaN(parseFloat(value))) {
+      submitTransition(value);
+    }
   };
 
   return (

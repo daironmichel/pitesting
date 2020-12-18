@@ -11,24 +11,29 @@ from pigpio import pi
 class PWMTransitionOutputDevice(PWMOutputDevice):
 
     def _blink_device(
-            self, on_time, off_time, fade_in_time, fade_out_time, n, fps=25, max_value=1):
+            self, on_time, off_time, fade_in_time, fade_out_time, n, fps=25, min_value=0, max_value=1):
+        if not 0 <= min_value <= 1:
+            raise OutputDeviceBadValue("min_value must be between 0 and 1")
         if not 0 <= max_value <= 1:
             raise OutputDeviceBadValue("max_value must be between 0 and 1")
+        if not min_value <= max_value:
+            raise OutputDeviceBadValue("min_value must be less than max_value")
+        amount_to_move = max_value - min_value
         sequence = []
         if fade_in_time > 0:
             sequence += [
-                (i * (max_value / fps) / fade_in_time, 1 / fps)
+                (min_value + (i * (amount_to_move / fps) / fade_in_time), 1 / fps)
                 for i in range(int(fps * fade_in_time))
                 ]
         if on_time is not None:
             sequence.append((max_value, on_time))
         if fade_out_time > 0:
             sequence += [
-                (max_value - (i * (max_value / fps) / fade_out_time), 1 / fps)
+                (max_value - (i * (amount_to_move / fps) / fade_out_time), 1 / fps)
                 for i in range(int(fps * fade_out_time))
                 ]
         if off_time is not None:
-            sequence.append((0, off_time))
+            sequence.append((min_value, off_time))
         sequence = (
                 cycle(sequence) if n is None else
                 chain.from_iterable(repeat(sequence, n))
@@ -39,13 +44,18 @@ class PWMTransitionOutputDevice(PWMOutputDevice):
                 break
 
     def blink(
-            self, on_time=1, off_time=1, fade_in_time=0, fade_out_time=0, n=None, background=True, fps=25, max_value=1):
+            self, on_time=1, off_time=1, fade_in_time=0, fade_out_time=0, n=None, background=True, fps=25,
+            min_value=0, max_value=1):
+        if not 0 <= min_value <= 1:
+            raise OutputDeviceBadValue("min_value must be between 0 and 1")
         if not 0 <= max_value <= 1:
             raise OutputDeviceBadValue("max_value must be between 0 and 1")
+        if not min_value <= max_value:
+            raise OutputDeviceBadValue("min_value must be less than max_value")
         self._stop_blink()
         self._blink_thread = GPIOThread(
             target=self._blink_device,
-            args=(on_time, off_time, fade_in_time, fade_out_time, n, fps, max_value)
+            args=(on_time, off_time, fade_in_time, fade_out_time, n, fps, min_value, max_value)
         )
         self._blink_thread.start()
         if not background:
@@ -108,20 +118,27 @@ class DeskMotor(PhaseEnableMotor):
         self.enable_device.blink(
             on_time=0, off_time=None, fade_in_time=speed_up_time or self.transition_time,
             max_value=speed or self.speed, n=1)
-        
+
     def stop(self, speed_down_time=None):
         """
         Stop the motor.
         """
-        if isinstance(self.enable_device, PWMOutputDevice):
-            self.enable_device.frequency = self.frequency
-
-        self.enable_device.blink(
-            on_time=None, off_time=0, fade_out_time=speed_down_time or self.transition_time,
-            max_value=math.fabs(self.value), n=1)
+        self.update(speed=0, transition_time=speed_down_time)
 
     def update(self, speed=None, frequency=None, transition_time=None):
-        pass
+        if isinstance(self.enable_device, PWMOutputDevice):
+            self.enable_device.frequency = frequency or self.frequency
+
+        current_speed = math.fabs(speed)
+
+        if current_speed < speed:
+            self.enable_device.blink(
+                on_time=0, off_time=None, fade_in_time=transition_time or self.transition_time,
+                min_value=current_speed, max_value=speed, n=1)
+        else:
+            self.enable_device.blink(
+                on_time=None, off_time=0, fade_out_time=transition_time or self.transition_time,
+                min_value=speed, max_value=current_speed, n=1)
 
 
 class Desk:
