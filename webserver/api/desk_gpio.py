@@ -13,6 +13,7 @@ class Desk:
         self.up_button: Button = Button(23)
         self.down_button: Button = Button(24)
         self.motor: PhaseEnableMotor = PhaseEnableMotor(6, 12)  # pins(dir, pwm)
+        self.motor.enable_device.frequency = 3000
 
         self.up_button.when_activated = self.up_pressed
         self.up_button.when_deactivated = self.up_or_down_released

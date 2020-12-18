@@ -6,7 +6,7 @@ import FormInput from "../components/FormInput";
 
 function Dashboard() {
   const [speed, setSpeed] = React.useState("100");
-  const [frequency, setFrequency] = React.useState("100");
+  const [frequency, setFrequency] = React.useState("3000");
 
   const axiosInstance = axios.create({ baseURL: window.location.origin });
   const raiseDesk = async () => {
