@@ -10,7 +10,8 @@ desk_router = APIRouter(prefix="/api/desk", tags=["desk"])
 
 @desk_router.post("/up")
 def move_desk_up():
-    desk_gpio.desk.motor.forward()
+    #desk_gpio.desk.motor.forward()
+    desk_gpio.desk.motor.enable_device.blink(on_time=216000, fade_in_time=1, fade_out_time=1)
     return {"ok": True}
 
 
