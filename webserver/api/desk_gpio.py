@@ -1,3 +1,4 @@
+import math
 from itertools import repeat, cycle, chain
 from typing import Optional
 
@@ -90,7 +91,7 @@ class DeskMotor(PhaseEnableMotor):
         Stop the motor.
         """
         self.enable_device.blink(
-            on_time=None, off_time=None, fade_out_time=speed_down_time, max_value=self.value, n=1)
+            on_time=None, off_time=None, fade_out_time=speed_down_time, max_value=math.fabs(self.value), n=1)
 
 
 class Desk:
