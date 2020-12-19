@@ -52,7 +52,12 @@ class PWMTransitionOutputDevice(PWMOutputDevice):
             raise OutputDeviceBadValue("max_value must be between 0 and 1")
         if not min_value <= max_value:
             raise OutputDeviceBadValue("min_value must be less than max_value")
-        self._stop_blink()
+        try:
+            self._stop_blink()
+        except RuntimeError as e:
+            if "cannot join thread before it is started" not in str(e):
+                raise e
+
         self._blink_thread = GPIOThread(
             target=self._blink_device,
             args=(on_time, off_time, fade_in_time, fade_out_time, n, fps, min_value, max_value)
