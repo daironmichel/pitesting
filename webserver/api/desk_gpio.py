@@ -86,7 +86,7 @@ class DeskMotor(PhaseEnableMotor):
         self.transition_time = 1
 
     def config(self, speed=None, frequency=None, transition_time=None):
-        if 0 <= speed <= 1:
+        if speed and 0 <= speed <= 1:
             self.speed = speed
         if frequency is not None:
             self.frequency = frequency
@@ -184,15 +184,6 @@ class Desk:
         # print("backward")
         self.motor.backward()
         # print(f"motor: {self.motor.__dict__}")
-
-    def set_motor_speed(self, value: float):
-        if not self.motor.is_active:
-            return
-        if not 0 <= value <= 1:
-            return
-        pwm_value = int(255 * value)
-        print(f"setting pwm: {pwm_value}")
-        self.pi.set_PWM_dutycycle(self.ENABLE_PIN, pwm_value)
 
 
 desk: Optional[Desk] = None
