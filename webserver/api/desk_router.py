@@ -46,11 +46,11 @@ def move_desk_down(motor_input: MotorInput):
 
 @desk_router.post("/motor")
 def desk_motor(motor_input: MotorInput):
-    # desk_gpio.desk.motor.config(**_input_to_config(motor_input))
-    # desk_gpio.desk.motor.update()
-    if motor_input.frequency is not None:
-        desk_gpio.desk.motor.enable_device.frequency = motor_input.frequency
-    if motor_input.speed is not None:
-        desk_gpio.desk.motor.value = motor_input.speed / 100
+    desk_gpio.desk.motor.config(**_input_to_config(motor_input))
+    desk_gpio.desk.motor.update()
+    # if motor_input.frequency is not None:
+    #     desk_gpio.desk.motor.enable_device.frequency = motor_input.frequency
+    # if motor_input.speed is not None:
+    #     desk_gpio.desk.motor.value = motor_input.speed / 100
 
     return {"ok": True}
