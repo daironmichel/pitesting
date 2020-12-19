@@ -89,6 +89,10 @@ class DeskMotor(PhaseEnableMotor):
             self.transition_time = transition_time
 
     def forward(self, speed=None, speed_up_time=None):
+        target_frequency = self.frequency
+        target_transition_time = speed_up_time if speed_up_time is not None else self.transition_time
+        target_speed = speed if speed is not None else self.speed
+
         if isinstance(self.enable_device, DigitalOutputDevice):
             if speed not in (0, 1):
                 raise ValueError(
@@ -98,13 +102,16 @@ class DeskMotor(PhaseEnableMotor):
         self.phase_device.off()
 
         if isinstance(self.enable_device, PWMOutputDevice):
-            self.enable_device.frequency = self.frequency
+            self.enable_device.frequency = target_frequency
 
         self.enable_device.blink(
-            on_time=0, off_time=None, fade_in_time=speed_up_time or self.transition_time,
-            max_value=speed or self.speed, n=1)
+            on_time=0, off_time=None, fade_in_time=target_transition_time, max_value=target_speed, n=1)
 
     def backward(self, speed=None, speed_up_time=None):
+        target_frequency = self.frequency
+        target_transition_time = speed_up_time if speed_up_time is not None else self.transition_time
+        target_speed = speed if speed is not None else self.speed
+
         if isinstance(self.enable_device, DigitalOutputDevice):
             if speed not in (0, 1):
                 raise ValueError(
@@ -113,11 +120,10 @@ class DeskMotor(PhaseEnableMotor):
         self.phase_device.on()
 
         if isinstance(self.enable_device, PWMOutputDevice):
-            self.enable_device.frequency = self.frequency
+            self.enable_device.frequency = target_frequency
 
         self.enable_device.blink(
-            on_time=0, off_time=None, fade_in_time=speed_up_time or self.transition_time,
-            max_value=speed or self.speed, n=1)
+            on_time=0, off_time=None, fade_in_time=target_transition_time, max_value=target_speed, n=1)
 
     def stop(self, speed_down_time=None):
         """
@@ -126,19 +132,22 @@ class DeskMotor(PhaseEnableMotor):
         self.update(speed=0, transition_time=speed_down_time)
 
     def update(self, speed=None, frequency=None, transition_time=None):
+        target_frequency = frequency if frequency is not None else self.frequency
+        target_transition_time = transition_time if transition_time is not None else self.transition_time
+        target_speed = speed if speed is not None else self.speed
+        current_speed = math.fabs(self.value)
         if isinstance(self.enable_device, PWMOutputDevice):
-            self.enable_device.frequency = frequency or self.frequency
+            self.enable_device.frequency = target_frequency
 
-        current_speed = math.fabs(speed)
 
-        if current_speed < speed:
+        if current_speed < target_speed:
             self.enable_device.blink(
-                on_time=0, off_time=None, fade_in_time=transition_time or self.transition_time,
-                min_value=current_speed, max_value=speed, n=1)
+                on_time=0, off_time=None, fade_in_time=target_transition_time,
+                min_value=current_speed, max_value=target_speed, n=1)
         else:
             self.enable_device.blink(
-                on_time=None, off_time=0, fade_out_time=transition_time or self.transition_time,
-                min_value=speed, max_value=current_speed, n=1)
+                on_time=None, off_time=0, fade_out_time=target_transition_time,
+                min_value=target_speed, max_value=current_speed, n=1)
 
 
 class Desk:
